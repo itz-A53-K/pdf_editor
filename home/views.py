@@ -257,12 +257,14 @@ def dlt_all_file(request):
     if request.method=="POST":
         mrg_pdf=list(dirPathCreate('upload/mrg_pdf').glob("*.pdf"))   #getting all files
         pdf_to_txt=list(dirPathCreate('upload/pdf_txt').glob("*.pdf"))   
+        word_to_pdf=list(dirPathCreate('upload/word_pdf').glob("*"))   
         output=list(dirPathCreate('output').glob("*"))  
         rotate=list(dirPathCreate('rotate').glob("*"))  
         protect=list(dirPathCreate('upload/enc_pdf').glob("*"))  
 
         dltFile_func(mrg_pdf)
         dltFile_func(pdf_to_txt)
+        dltFile_func(word_to_pdf)
         dltFile_func(output)
         dltFile_func(rotate)
         dltFile_func(protect)
