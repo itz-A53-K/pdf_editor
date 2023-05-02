@@ -1,0 +1,178 @@
+
+ @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Open+Sans:wght@600&family=Ysabeau:wght@400;500&display=swap');
+
+/*font-family: 'Dancing Script', cursive;
+font-family: 'Ysabeau', sans-serif;
+font-family: 'Open Sans', sans-serif; */
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+
+.bodySec{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 100%;
+}
+.showingSec{
+    width: 75%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+}
+.actionCard{
+    width: 25%;
+    height: 100vh;
+    background-color: rgb(247, 224, 188);
+    box-shadow: 0px 0px 5px 2px rgba(111, 103, 103, 0.789);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+.actionCard .title{
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid rgb(44, 42, 42);
+    margin-top: 2rem;
+}
+.actionCard .title h2{
+    font-size: 2rem;
+    margin: 1rem;
+}
+.actionCard .msg{
+    width: 70%;
+    text-align: left;
+    border-radius: 5px;
+    word-spacing: 5px;
+    background-color: #cfeada92;
+    box-shadow:  0px 0px 8px 1px rgb(130, 137, 135);
+}
+.actionCard .msg p{
+    font-size: 1.2rem;
+    margin: 2rem;
+}
+
+.compActionBtn{
+    font-size: 1.5rem;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor:pointer;
+    padding: 1rem 1rem 1rem 2rem;
+    border: 1px solid rgb(189, 149, 199);
+    padding-right: .5rem;
+    align-items: center;
+    margin: 2rem .5rem;
+    width: 15rem;
+    transform: .2s ease;
+    background-color: #32e4c4;
+    text-align: left;
+    transition: transform 0.3s ease;
+}
+.compActionBtn:hover{
+    box-shadow:  0px 0px 8px 1px rgb(130, 137, 135);
+    background-color: #10e8a7;
+}
+
+.compActionBtn i{
+    display: inline-block;
+    margin-right: 10px;
+    transition: transform 0.3s ease;
+}
+  
+.compActionBtn:hover i {
+    transform: translate(1.5rem);
+}
+.compActionBtn:disabled i{
+    transform: translate(0);
+}
+
+
+.uploadHome{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
+    margin-top: 6rem;
+
+}
+.uploadHome .text h2{
+    font-size: 2.2rem;
+    text-align: center;
+    margin: .5rem;
+    font-family: 'Open Sans', sans-serif;
+    color: rgb(94, 90, 89);
+}
+.uploadHome .text p{
+    font-size: 1.5rem;
+    text-align: center;
+    margin: .5rem;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    color: rgb(43, 42, 42);
+    font-family: 'Ysabeau', sans-serif;
+}
+.uploadHome form , .showingSec form{
+    margin: 2rem 0;
+}
+.uploadHome form input, .showingSec form input{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.uploadHome form label, .showingSec form label{
+    color: beige;
+    background-color: rgb(46, 168, 234);
+    cursor: pointer;
+    padding: 1rem 6rem;
+    margin: 1rem;
+    border-radius: 5px;
+    font-size: 1.5rem;
+}
+.uploadHome form label:hover, .showingSec form label:hover{
+    background-color: rgb(38, 148, 192);
+}
+
+
+.danger_msg{
+    color: rgb(168, 20, 20);
+    border: 1px solid rgb(168, 20, 20);
+    border-radius: 5px;
+    padding: .3rem;
+    margin: .5rem ;
+    width: fit-content;
+}
+.success_msg{
+    width: fit-content;
+    margin: .5rem ;
+    padding: .3rem;
+    border: 1px solid rgb(18, 147, 14);
+    border-radius: 5px;
+    color: rgb(18, 147, 14);
+}
+
+.actionCard .actionBtn_box{
+    width: 80%;
+    text-align: left;
+}
+.actionCard .actionBtn_box h3{
+    margin: .5rem 0 1rem -.5rem 
+}
+

@@ -1,0 +1,285 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block title %}Marge Pdf{% endblock title %}
+
+{% block css %}
+
+.uploadedFiles{
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    min-height: 15rem;
+    justify-content: center;
+    height: 80%;
+    width: 101%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+.fileBox{
+    background-color: #fff;
+    box-shadow: 0px 0px 5px 1px gray;
+    border-radius: 5px;
+    width: 10rem;
+    height: 14.25rem;
+    padding: .8rem;
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    cursor:all-scroll;
+}
+.fileBox .imgDiv {
+    width:90%;
+    height:12rem;
+    object-fit: fill;
+}
+.fileBox .imgDiv img{
+    width:100%;
+    height:100%;
+}
+.fileBox .details .fileName2{
+    margin: .2rem ;
+    height:1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+    padding: 5px;
+    border: 2px solid white;
+    display: block;
+}
+
+.fileBox .details .fileName1{
+    margin: .2rem ;
+    height:1rem;
+    cursor: default;
+    padding: 5px;
+    width: max-content;
+}
+.tooltip{
+    text-align: center;
+    background: white;
+    border: 2px solid gray;
+    width: max-content;
+    max-width:18rem;
+    overflow-wrap: anywhere;
+    margin-top : .8rem;
+    z-index: 99;
+    position: fixed;
+    margin-left: -5rem;
+}
+
+.hidden{
+    display:none !important;
+}
+
+.file_action{
+    top: 8px;
+    right: 8px;
+    position: absolute;
+    z-index: 9;
+    font-size: 1.5rem;
+}
+.file_action a{
+    background-color: #efeaea;
+    cursor: pointer ;
+}
+
+{% endblock css %}
+
+{% block body %}
+<section class="margeHead uploadHome" id= "margeHead">
+    <div class="text">
+        <h2>Marge PDF Files</h2>
+        <p>Combine two or more PDF files in any order.</p>
+    </div>
+    <form  method="post" enctype="multipart/form-data" id="mrghead_Frm">
+        {% csrf_token %}
+        <div class="frm-item">
+            <input type="file" name="file" id="mHead_inpfile" required accept=".pdf">
+            <label for="mHead_inpfile">Choose a file</label>
+        </div>
+        
+    </form>
+    
+</section>
+<section class="margeBody hidden bodySec" id= "margeBody">
+    <div class="showingSec">
+        <form method="POST" enctype="multipart/form-data" id="mrgbody_Frm">
+            {% csrf_token %}
+            <div class="frm-item">
+                <input type="file" name="file" id="inpfile" required accept=".pdf">
+                <label for="inpfile">Choose another file</label>
+            </div> 
+            
+        </form>
+
+        <div class="uploadedFiles">
+            
+            {% for file in pdf_files %}
+                <div class="fileBox">
+                    <div class="file_action hidden">
+                        <a pth="{{file}}" class="dlt_btn" title="Remove this file" ><i class="bi bi-x-octagon"></i></a>
+                    </div>
+                    <div class="imgDiv">
+                        <img src="{%static 'pdf image.png' %}" alt="" srcset="" >
+                    </div>
+                    <div class="details">
+                        <div class="tooltip hidden">
+                            <span style="text-align:center;" class="fileName1" >{{file}}</span>
+                        </div>
+                        <span style="text-align:center;" class="fileName2">{{file| truncatechars:'16'}}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="actionCard">
+        <div class="title">
+            <h2>Marge PDF</h2>
+        </div>
+        <div class="msg {% if fileCount >= 2 %}hidden{% endif %}">
+            <p>Please, select more PDF files to marge from your storage by clicking again on "Choose File".</p>
+        </div>
+        <div>
+            <button class="btn compActionBtn"  id="mrg_btn" {% if fileCount < 2 %}disabled title="Add more PDF files"{% endif %} >Marge &nbsp;<i class="bi bi-arrow-right-square"></i></button>
+        </div>
+        
+    </div>
+</section>
+{% endblock body %}
+
+{% block JS %}
+<script>
+    window.history.pushState({page: 1}, "", "");
+    $(".uploadedFiles")
+    .on( "mouseenter", ".fileBox", function() {
+        $(this).children().first().removeClass("hidden")
+    })
+    .on( "mouseleave",".fileBox", function() {
+        $(this ).children().first().addClass("hidden")
+    })
+    .on( "mouseover",".details", function(x) {
+        $(this).children().eq(0).removeClass("hidden")
+        $(this).children().eq(1).addClass("hidden")
+    })
+    .on( "mouseleave",".details", function() {
+        $(this).children().eq(0).addClass("hidden")
+        $(this).children().eq(1).removeClass("hidden")
+        
+    });
+    
+</script>
+<script>
+    function setHidden(){
+        const blkd = localStorage.getItem('blkd');
+        if (blkd) {
+            if (blkd == 'true') {
+                $("#margeBody").removeClass("hidden")
+                $("#margeHead").addClass("hidden")
+            }
+            else {
+                $("#margeHead").removeClass("hidden")
+                $("#margeBody").addClass("hidden")
+            }
+        }
+    }
+    $('document').ready(function(){
+        setHidden()
+        $("#mHead_inpfile").val("")   
+        setTimeout( function() {
+            dlt_upload_file_mrg()
+        },2000)
+    })
+    
+    $(".uploadedFiles").on("click", ".dlt_btn", function() {
+        pth= $(this).attr("pth")
+        $.ajax({
+            type: "POST",
+            url: "/dlt_file/",
+            data:{
+                f_name:pth,
+                csrfmiddlewaretoken: "{{ csrf_token }}"
+            },          
+            success: function (data) {
+                add_fileBox(data.pdf_files, data.fileCount)
+            },
+        });
+    })
+    
+    document.getElementById("mHead_inpfile").onchange = function() {
+        
+        var form_data = new FormData($('#mrghead_Frm')[0]);
+        form_data.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+        
+        $.ajax({
+            type: "POST",
+            url: "/marge/",
+            processData: false,
+            contentType: false,
+            cache: false,
+            data:  form_data,
+            
+            success: function (data) {
+                $("#margeBody").removeClass("hidden")
+                $("#margeHead").addClass("hidden")
+
+                add_fileBox(data.pdf_files, data.fileCount)
+            },
+        });
+        
+        localStorage.setItem('blkd', 'true');
+        
+    };
+    document.getElementById("inpfile").onchange = function() {
+        dlt_upload_file_mrg()
+        
+        var form_data = new FormData($('#mrgbody_Frm')[0]);
+        form_data.append("csrfmiddlewaretoken", "{{ csrf_token }}")
+        
+        $.ajax({
+            type: "POST",
+            url: "/marge/",
+            processData: false,
+            contentType: false,
+            cache: false,
+            data:  form_data,
+            
+            success: function (data) {
+                //data_files=data.pdf_files.reverse()
+                data_files=data.pdf_files
+                add_fileBox(data_files, data.fileCount)
+            },
+        });
+    };
+
+
+
+    function add_fileBox(data_files, fileCount){
+        $(".uploadedFiles").html("")
+        $("#inpfile").val("")
+        
+        for( var i= 0 ; i<data_files.length; i++){
+            file=data_files[i]
+
+            fileShowCode= `<div class="fileBox"><div class="file_action hidden"><a pth="${file}" class="dlt_btn" title="Remove this file"><i class="bi bi-x-octagon"></i></a></div><div class="imgDiv"><img src="{%static "pdf image.png" %}" alt="${file}" srcset="" ></div><div class="details"><div class="tooltip hidden"><span style="text-align:center;" class="fileName1 " >${file}</span></div><span style="text-align:center;" class="fileName2">${file.slice( 0,15)}...</span></div></div>`
+
+            $(".uploadedFiles").append(fileShowCode)
+        }
+        if(fileCount >= 2){
+            $("#mrg_btn").prop( "disabled", false ).prop("title","Click to marge PDF files");
+            $(".msg").addClass("hidden")
+        }
+        else{
+            $("#mrg_btn").prop( "disabled", true ).prop("title","Add more PDF files");
+            $(".msg").removeClass("hidden")
+        }
+    }
+
+    $("#mrg_btn").click( function(){
+        location.href= "/handle_marge/"
+    })
+    
+</script>
+{% endblock JS %}

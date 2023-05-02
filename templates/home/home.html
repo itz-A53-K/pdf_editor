@@ -1,0 +1,165 @@
+{% extends 'home/base.html' %}
+
+{% block title %}Home{% endblock title %}
+
+{% block css %}
+
+.linkCard{
+    width: 18rem;
+    padding: 1rem;
+    margin: 1px;
+    display: flex;
+    flex-direction: column;
+    cursor:pointer;
+    text-decoration: none;
+    background-color: rgba(242, 240, 237, 0.777);
+}
+.linkCard:hover{
+    background-color: rgba(234, 193, 132, 0.777);
+}
+.linkCard a{
+    color: black;
+    text-decoration: none;
+    text-align: center;
+}
+.linkCard .imgDiv{
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    /* align-items: center; */
+    justify-content: center;
+    padding: .5rem;
+    position: relative;
+}
+.linkCard .imgDiv i{
+    font-size: 2rem;
+    position: absolute;
+}
+.dblI i:nth-child(1){
+    left: 8.8rem;
+}
+.dblI i:nth-child(2){
+    z-index: 9;
+    right: 9.5rem;
+    top: 1.8rem;
+}
+.dblI i:nth-child(2)::before{
+    background-color: #fff;
+    border: 3px solid rgb(175, 170, 170);
+    border-radius: 7px;
+}
+.linkCard .desc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 6rem;
+}
+.linkCard .desc h2{
+    text-align: center;
+    font-size: 1.8rem;
+    margin: .3rem 0;
+}
+.linkCard .desc p{
+    margin: 0;
+    text-align: center;
+    font-size: 1.2rem;
+    padding:0;
+}
+.txt_mrn i{
+    color: #ca5252;
+}
+.txt_sngl_grn i{
+    background: #1fc02f;
+    color: #fff;  
+    padding: .8rem;  
+}
+{% endblock css %}
+
+{% block body %}
+<section class="bodySec">
+<div class="linkCard" title="Marge PDF">
+    <a href="/marge/"  >
+        <div class="imgDiv txt_mrn dblI">
+            <i class="bi bi-arrow-down-left-square-fill"></i>
+            <i class="bi bi-arrow-up-right-square-fill"></i>
+
+        </div>
+        <div class="desc">
+            <h2>Marge PDF</h2>
+            <p>Combine two or more PDF files in any order.</p>
+        </div>
+    </a>
+</div>
+<div class="linkCard" title="PDF to Text">
+    <a href="/pdf_to_txt/" >
+        <div class="imgDiv dblI">
+            <i class="bi bi-arrow-down-left-square-fill"></i>
+            <i class="bi bi-file-earmark-font-fill"></i>
+        </div>
+        <div class="desc">
+            <h2>PDF to Text</h2>
+            <p>Convert PDF file to Text file.</p>
+        </div>
+    </a>
+</div>
+<div class="linkCard" title="Word to PDF">
+    <a href="/word_to_pdf/" >
+        <div class="imgDiv dblI txt_mrn">
+            <i class="bi bi-file-earmark-word" ></i>
+            <i class="bi bi-arrow-down-left-square-fill"></i>
+        </div>
+        <div class="desc">
+            <h2>Word to PDF</h2>
+            <p>Convert word file to PDF.</p>
+        </div>
+    </a>
+</div>
+<div class="linkCard" title="Rotate PDF">
+    <a href="/rotate_PDF/" >
+        <div class="imgDiv txt_sngl_grn">
+            <i class="bi bi-arrow-counterclockwise"></i>
+        </div>
+        <div class="desc">
+            <h2>Rotate PDF</h2>
+            <p>Rotate PDF files as you want.</p>
+        </div>
+    </a>
+</div>
+<div class="linkCard" title="Protect PDF">
+    <a href="/protect_PDF/" >
+        <div class="imgDiv dblI">
+            <i class="bi bi-shield-lock-fill" style="font-size:2.5rem"></i>
+            <i class="bi bi-key-fill" style="rotate:-45deg; font-size:1.5rem"></i>
+        </div>
+        <div class="desc">
+            <h2>Protect PDF</h2>
+            <p>Protect your PDF file with a strong password.</p>
+        </div>
+    </a>
+</div>
+<div class="linkCard" title="Compress PDF">
+    <a href="/compress_pdf/" >
+        <div class="imgDiv">
+
+        </div>
+        <div class="desc">
+            <h2>Compress PDF</h2>
+            <p>kjjdhfdjsfjfsfsgfsgjdsfsdj</p>
+        </div>
+    </a>
+</div>
+</section>
+{% endblock body %}
+
+{% block JS %}
+<script>
+    localStorage.setItem('blkd', 'false');
+    $('document').ready(function(){ 
+        setTimeout( function() {
+            dlt_upload_file()
+        },2000)
+    })
+   
+</script>
+{% endblock JS %}

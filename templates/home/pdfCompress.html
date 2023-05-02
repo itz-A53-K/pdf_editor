@@ -1,0 +1,37 @@
+{% extends 'home/base.html' %}
+
+{% block body %}
+<section class="uploadHome">
+    <div class="text">
+        <h2>Compress PDF Files</h2>
+        <p>Compress PDF files.</p>
+    </div>
+    <form method="POST" enctype="multipart/form-data" id="form" action="/compress_pdf/">
+        {% csrf_token %}
+        <div class="frm-item">
+            <input type="file" name="file" id="inpfile" required accept=".docx,.doc">
+            <label for="inpfile">Choose a file</label>
+        </div> 
+        
+    </form>
+</section>
+new size:{{nsize}}
+{% endblock body %}
+{% block JS %}
+<script>
+    window.addEventListener("load", (event) =>{
+        $("#inpfile").val("")   
+    })
+    $('document').ready(function(){ 
+        $("#inpfile").val("")  
+
+        setTimeout( function() {
+            dlt_upload_file()
+        },2000)
+    })
+    
+    document.getElementById("inpfile").onchange = function() {
+        document.getElementById("form").submit()
+    }
+</script>
+{% endblock JS %}
