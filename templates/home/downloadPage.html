@@ -1,19 +1,39 @@
 {% extends 'home/base.html' %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}Download{% endblock title %}
+{% block css %}
+#download_btn{
+    font-size: 1.5rem;
+    border-radius:5px;
+    color: black;
+    background-color: #32e4c4;
+    height: 4rem;
+    width: 30%;
+    cursor: pointer;
+    font-weight: 700;
+    margin: 1rem ;
+}
+#download_btn i{
+    font-size: 2rem;
+}
+#download_btn:hover{
+    box-shadow:  0px 0px 8px 1px rgb(130, 137, 135);
+    background-color: #10e8a7;
+}
 
+
+{% endblock %}
 {% block body %}
-<section>
-    <button class="btn" id="download_btn">Download</button>
+<section class="bodySec" style="min-height:70vh;flex-direction:column;">
+    <button class="btn" id="download_btn">Download <i class="bi bi-download"></i></button>
+    <button onclick="window.history.go(-2)" class="backBtn"><i class="bi bi-arrow-left-square"></i>Go Back</button>
 </section>
 <section>
-    <form action="/download/" method="post" id="downFrm"hidden>
+    <form action="/download/" method="post" id="downFrm" hidden>
         {% csrf_token %}
         <input type="hidden" name="path" id= "path" value="">
     </form>
 </section>
-<button onclick="window.history.go(-2)">Back</button>
-<button onclick="window.history.forward()">forword</button>
 {% endblock body %}
 {% block JS %}
 <script>

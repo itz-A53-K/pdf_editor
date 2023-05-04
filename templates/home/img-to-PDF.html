@@ -39,6 +39,13 @@
     width:100%;
     height:100%;
 }
+.fileBox .imgDiv i{
+    font-size: 12rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .fileBox .details .fileName2{
     margin: .2rem ;
     height:1rem;
@@ -91,39 +98,42 @@
 {% block body %}
 <section class="margeHead uploadHome" id= "margeHead">
     <div class="text">
-        <h2>Marge PDF Files</h2>
-        <p>Combine two or more PDF files in any order.</p>
+        <h2>Image to PDF </h2>
+        <p>Convert Image to PDF File.</p>
     </div>
     <form  method="post" enctype="multipart/form-data" id="mrghead_Frm">
         {% csrf_token %}
         <div class="frm-item">
-            <input type="file" name="file" id="mHead_inpfile" required accept=".pdf">
-            <label for="mHead_inpfile">Choose a file</label>
-        </div>        
+            <input type="file" name="file" id="mHead_inpfile" required accept=".JPG,.PNG, .JPEG">
+            <label for="mHead_inpfile">Choose an Image*</label>
+        </div>
+        
     </form>
-    <a href="/" class="backBtn"><i class="bi bi-arrow-left-square"></i>Go Back</a>    
+    <span style="color:red; text-align:center;">*Only JPG,PNG and JPEG</span>
+    <a href="/" class="backBtn"><i class="bi bi-arrow-left-square"></i>Go Back</a>
+    
 </section>
-
 <section class="margeBody hidden bodySec" id= "margeBody">
     <div class="showingSec">
         <form method="POST" enctype="multipart/form-data" id="mrgbody_Frm">
             {% csrf_token %}
             <div class="frm-item">
-                <input type="file" name="file" id="inpfile" required accept=".pdf">
-                <label for="inpfile">Choose another file</label>
+                <input type="file" name="file" id="inpfile" required accept=".JPG,.PNG, .JPEG">
+                <label for="inpfile">Choose another Image*</label>
             </div> 
             
         </form>
+        <span style="color:red; text-align:center;">*Only JPG,PNG and JPEG</span>
 
         <div class="uploadedFiles">
             
-            {% for file in pdf_files %}
+            {% for file in fn %}
                 <div class="fileBox">
                     <div class="file_action hidden">
                         <a pth="{{file}}" class="dlt_btn" title="Remove this file" ><i class="bi bi-x-octagon"></i></a>
                     </div>
                     <div class="imgDiv">
-                        <img src="{%static 'pdf image.png' %}" alt="" srcset="" >
+                        <i class="bi bi-file-earmark-image"></i>
                     </div>
                     <div class="details">
                         <div class="tooltip hidden">
@@ -137,13 +147,17 @@
     </div>
     <div class="actionCard">
         <div class="title">
-            <h2>Marge PDF</h2>
+            <h2>Image to PDF</h2>
         </div>
-        <div class="msg {% if fileCount >= 2 %}hidden{% endif %}">
-            <p>Please, select more PDF files to marge from your storage by clicking again on "Choose File".</p>
-        </div>
+        
         <div>
-            <button class="btn compActionBtn"  id="mrg_btn" {% if fileCount < 2 %}disabled title="Add more PDF files"{% endif %} >Marge &nbsp;<i class="bi bi-arrow-right-square"></i></button>
+            <form action="/img_to_pdf/" method="post" id="">
+                {% csrf_token %}
+                <div class="frm-item">
+                    <input type="hidden" name="mkPDF" value="mkPdF">
+                    <button class="btn compActionBtn" type="submit" id="compActionBtn" title="Click to convert Image to PDFiles" {% if fileCount == 0 %}disabled{% endif %}>Convert &nbsp;<i class="bi bi-arrow-right-square"></i></button>
+                </div>                 
+            </form>
         </div>
         
     </div>
@@ -172,6 +186,7 @@
     
 </script>
 <script>
+    
     function setHidden(){
         const blkd = localStorage.getItem('blkd');
         if (blkd) {
@@ -200,11 +215,11 @@
             url: "/dlt_file/",
             data:{
                 f_name:pth,
-                b_dir:"mrg_pdf",
+                b_dir:"img",
                 csrfmiddlewaretoken: "{{ csrf_token }}"
             },          
             success: function (data) {
-                add_fileBox(data.pdf_files, data.fileCount)
+                add_fileBox(data.pdf_files)
             },
         });
     })
@@ -216,7 +231,7 @@
         
         $.ajax({
             type: "POST",
-            url: "/marge/",
+            url: "/img_to_pdf/",
             processData: false,
             contentType: false,
             cache: false,
@@ -226,7 +241,7 @@
                 $("#margeBody").removeClass("hidden")
                 $("#margeHead").addClass("hidden")
 
-                add_fileBox(data.pdf_files, data.fileCount)
+                add_fileBox(data.pdf_files)
             },
         });
         
@@ -241,7 +256,7 @@
         
         $.ajax({
             type: "POST",
-            url: "/marge/",
+            url: "/img_to_pdf/",
             processData: false,
             contentType: false,
             cache: false,
@@ -250,37 +265,33 @@
             success: function (data) {
                 //data_files=data.pdf_files.reverse()
                 data_files=data.pdf_files
-                add_fileBox(data_files, data.fileCount)
+                add_fileBox(data_files)
             },
         });
     };
 
 
 
-    function add_fileBox(data_files, fileCount){
+    function add_fileBox(data_files){
         $(".uploadedFiles").html("")
         $("#inpfile").val("")
         
         for( var i= 0 ; i<data_files.length; i++){
             file=data_files[i]
 
-            fileShowCode= `<div class="fileBox"><div class="file_action hidden"><a pth="${file}" class="dlt_btn" title="Remove this file"><i class="bi bi-x-octagon"></i></a></div><div class="imgDiv"><img src="{%static "pdf image.png" %}" alt="${file}" srcset="" ></div><div class="details"><div class="tooltip hidden"><span style="text-align:center;" class="fileName1 " >${file}</span></div><span style="text-align:center;" class="fileName2">${file.slice( 0,15)}...</span></div></div>`
+            fileShowCode= `<div class="fileBox"><div class="file_action hidden"><a pth="${file}" class="dlt_btn" title="Remove this file"><i class="bi bi-x-octagon"></i></a></div><div class="imgDiv"><i class="bi bi-file-earmark-image"></i></div><div class="details"><div class="tooltip hidden"><span style="text-align:center;" class="fileName1 " >${file}</span></div><span style="text-align:center;" class="fileName2">${file.slice( 0,15)}...</span></div></div>`
 
             $(".uploadedFiles").append(fileShowCode)
         }
-        if(fileCount >= 2){
-            $("#mrg_btn").prop( "disabled", false ).prop("title","Click to marge PDF files");
-            $(".msg").addClass("hidden")
+
+        if(data_files.length == 0){
+            $("#compActionBtn").prop( "disabled", true).prop("title","Click to convert Image to PDFiles");
         }
         else{
-            $("#mrg_btn").prop( "disabled", true ).prop("title","Add more PDF files");
-            $(".msg").removeClass("hidden")
+            $("#compActionBtn").prop( "disabled", false ).prop("title","Please add alteast files");
         }
     }
 
-    $("#mrg_btn").click( function(){
-        location.href= "/handle_marge/"
-    })
     
 </script>
 {% endblock JS %}

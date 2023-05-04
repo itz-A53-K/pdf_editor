@@ -12,6 +12,7 @@ urlpatterns = [
     path('pdf_to_txt/', views.pdf_to_txt, name="pdf_to_txt"),
     path('rotate_PDF/', views.rotate_handle, name="rotate_handle"),
     path('protect_PDF/', views.protect_PDF, name="protect_PDF"),
+    path('img_to_pdf/', views.img_to_pdf, name="img_to_pdf"),
     # path('marge/<slug:data>', views.handle_upload, name="handle_upload"),
     # path('marge_func/', views.handle_marge, name="handle_marge"),
 

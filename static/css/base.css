@@ -176,3 +176,30 @@ body{
     margin: .5rem 0 1rem -.5rem 
 }
 
+.backBtn{
+    font-size: 1.2rem;
+    border-radius:5px;
+    color: black;
+    background-color: #e4cf32;
+    height: 3rem;
+    width: 10%;
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+    text-decoration: none;
+}
+.backBtn i{
+    font-size: 1.5rem;
+    display: inline-block;
+    margin: 0 10px;
+    transition: transform 0.3s ease;
+}
+  
+.backBtn:hover i {
+    transform: translate(-1rem);
+}
+

@@ -69,6 +69,12 @@
 .txt_mrn i{
     color: #ca5252;
 }
+.txt_Drk_grn i{
+    color: darkgreen;
+}
+.txt_dodgerblue i{
+    color: dodgerblue;
+}
 .txt_sngl_grn i{
     background: #1fc02f;
     color: #fff;  
@@ -105,8 +111,8 @@
 </div>
 <div class="linkCard" title="Word to PDF">
     <a href="/word_to_pdf/" >
-        <div class="imgDiv dblI txt_mrn">
-            <i class="bi bi-file-earmark-word" ></i>
+        <div class="imgDiv dblI txt_dodgerblue">
+            <i class="bi bi-file-word"></i>
             <i class="bi bi-arrow-down-left-square-fill"></i>
         </div>
         <div class="desc">
@@ -138,7 +144,19 @@
         </div>
     </a>
 </div>
-<div class="linkCard" title="Compress PDF">
+<div class="linkCard" title="Image to PDF">
+    <a href="/img_to_pdf/" >
+        <div class="imgDiv dblI txt_Drk_grn">
+            <i class="bi bi-image-fill"></i>
+            <i class="bi bi-arrow-down-left-square-fill"></i>
+        </div>
+        <div class="desc">
+            <h2>Image to PDF</h2>
+            <p>Convert images to PDF</p>
+        </div>
+    </a>
+</div>
+{% comment %} <div class="linkCard" title="Compress PDF">
     <a href="/compress_pdf/" >
         <div class="imgDiv">
 
@@ -148,7 +166,7 @@
             <p>kjjdhfdjsfjfsfsgfsgjdsfsdj</p>
         </div>
     </a>
-</div>
+</div> {% endcomment %}
 </section>
 {% endblock body %}
 

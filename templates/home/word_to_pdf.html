@@ -12,13 +12,14 @@
         <div class="frm-item">
             <input type="file" name="file" id="inpfile" required accept=".docx,.doc">
             <label for="inpfile">Choose a file</label>
-        </div> 
-        
+        </div>         
     </form>
+    <a href="/" class="backBtn"><i class="bi bi-arrow-left-square"></i>Go Back</a>    
 </section>
 {% endblock body %}
 {% block JS %}
 <script>
+    window.history.pushState({page: 1}, "", "");
     window.addEventListener("load", (event) =>{
         $("#inpfile").val("")   
     })

@@ -13,6 +13,9 @@ import glob
 import os,random,string
 from docx2pdf import convert
 from django.views.static import serve
+import img2pdf
+from PIL import Image
+import os
 
 
 
@@ -28,28 +31,20 @@ def handle_upload(request):
         if form.is_valid():
             inp_file= request.FILES["file"]
             if (inp_file.name).endswith('.pdf') or (inp_file.name).endswith('.PDF') :
-                handle_uploaded_pdf_file(inp_file, 'media/upload/mrg_pdf/')
+
+                handle_uploaded_file(inp_file, 'media/upload/mrg_pdf/')
                 success=True
             else:
-                # messages.error(request, "Invalid file type")
+                messages.error(request, "Invalid file type")
                 print("Invalid file type")
-            # return redirect("/marge/file")
         
-        pdf_files = list( dirPathCreate('upload/mrg_pdf').glob("*.pdf"))
-        pdf_files.sort(key=lambda x: os.path.getmtime(x))
-        
-        pdf_files_list=[]
-        for i in pdf_files:
-            pdf_files_list.append(os.path.basename(i))
-        return JsonResponse( {"success": success,"pdf_files": pdf_files_list,"fileCount": len(pdf_files) } )
+        W_filesList = list( dirPathCreate('upload/mrg_pdf').glob("*.pdf"))
+
+        return JsonResponse( {"success": success,"pdf_files": files_list(W_filesList),"fileCount": len(W_filesList) } )
     else:
-        pdf_files = list( dirPathCreate('upload/mrg_pdf').glob("*.pdf"))
-        pdf_files.sort(key=lambda x: os.path.getmtime(x))
-        
-        pdf_files_list=[]
-        for i in pdf_files:
-            pdf_files_list.append(os.path.basename(i))
-        return render( request, "home/margeBody.html", {"pdf_files": pdf_files_list,"fileCount": len(pdf_files)})
+        W_filesList = list( dirPathCreate('upload/mrg_pdf').glob("*.pdf"))
+
+        return render( request, "home/margeBody.html", {"pdf_files": files_list(W_filesList),"fileCount": len(W_filesList)})
 
 def handle_marge(request):
 
@@ -64,8 +59,6 @@ def handle_marge(request):
     merger.write("media/output/siteName_marged.pdf")
     merger.close()
     return redirect(f"/download/?{randomStr('/output/siteName_marged.pdf')}")
-        # return True
-    # return redirect("/")
 
 
 def download(request):
@@ -89,18 +82,68 @@ def download(request):
 
 def dlt_uploaded_file(request ):
     if request.method =="POST":
+        b_dir= request.POST.get("b_dir")
         f_name=request.POST.get("f_name")
 
-        file_path_asList=list(dirPathCreate('upload/mrg_pdf').glob(f_name))
+        file_path_asList=list(dirPathCreate('upload/'+b_dir).glob(f_name))
 
         dltFile_func(file_path_asList)
 
-        pdf_files=list(os.listdir(settings.MEDIA_ROOT+"/upload/mrg_pdf/"))
+        pdf_files=list(os.listdir(settings.MEDIA_ROOT+f"/upload/{b_dir}/"))
+        print(pdf_files)
+        print(len(pdf_files))
         
         return JsonResponse( {"success": True,"pdf_files": pdf_files,"fileCount": len(pdf_files) } )
-        # return redirect("/marge/file")
+    
     else:
         return redirect("/")
+
+
+def img_to_pdf(request):
+    if request.method =="POST":
+            
+        if request.POST.get("mkPDF") == "mkPdF":
+
+            dirname = settings.MEDIA_ROOT+"/upload/img/"
+            imgs = []
+            for fname in os.listdir(dirname):
+                path = os.path.join(dirname, fname)
+                imgs.append(path)
+
+            out_path=settings.MEDIA_ROOT+f"/output/image-to-pdf.pdf"
+
+            with open(out_path,"wb") as f:
+                f.write(img2pdf.convert(imgs))
+
+            return redirect(f"/download/?{randomStr('/output/image-to-pdf.pdf')}")
+
+        else:
+            success= True
+            form = fileInp_frm(request.POST, request.FILES)
+            if form.is_valid():
+                inp_file= request.FILES["file"]
+                
+                f_ext=[".PNG", ".png",".JPG",".jpg", ".JPEG", ".jpeg"]
+
+                if (inp_file.name).endswith(tuple(f_ext)) == True:
+
+                    handle_uploaded_file(inp_file, "media/upload/img/")
+                
+                else:
+                    messages.error(request, "Invalid file type")
+                    print("Invalid file type")
+                    success= False
+                    
+                W_filesList = list( dirPathCreate('upload/img').glob("*"))
+                
+                return JsonResponse( {"success": success,"pdf_files": files_list(W_filesList),"fileCount": len(W_filesList) } )
+                    
+            
+
+    W_filesList = list( dirPathCreate('upload/img').glob("*"))
+
+    params={"fn":files_list(W_filesList), "fileCount":len(W_filesList)}
+    return render( request, "home/img-to-PDF.html",params)
 
 
 def compress_pdf(request):
@@ -116,6 +159,7 @@ def compress_pdf(request):
     #         count += 1
     return render( request, "home/pdfCompress.html")
     pass
+
 
 def rotate_handle(request):
     global count
@@ -137,7 +181,7 @@ def rotate_handle(request):
                 inp_file= request.FILES["file"]
                 if (inp_file.name).endswith('.pdf') or (inp_file.name).endswith('.PDF') :
 
-                    handle_uploaded_pdf_file(inp_file, "media/rotate/")
+                    handle_uploaded_file(inp_file, "media/rotate/")
                     return JsonResponse({"success":True,"fn":inp_file.name})
                 else:
                     # messages.error(request, "Invalid file type")
@@ -158,8 +202,10 @@ def word_to_pdf(request):
         form = fileInp_frm(request.POST, request.FILES)
         if form.is_valid():
             inp_file= request.FILES["file"]
+
             if (inp_file.name).endswith('.docx') or (inp_file.name).endswith('.doc') :
-                handle_uploaded_pdf_file(inp_file, "media/upload/word_pdf/")
+
+                handle_uploaded_file(inp_file, "media/upload/word_pdf/")
                 inputFile=settings.MEDIA_ROOT+f"/upload/word_pdf/{inp_file.name}"
 
                 out_pdf_fileName=f"{os.path.splitext(inp_file.name)[0]}.pdf"
@@ -182,8 +228,10 @@ def pdf_to_txt(request):
         form = fileInp_frm(request.POST, request.FILES)
         if form.is_valid():
             inp_file= request.FILES["file"]
+
             if (inp_file.name).endswith('.pdf') or (inp_file.name).endswith('.PDF') :
-                handle_uploaded_pdf_file(inp_file, "media/upload/pdf_txt/")
+
+                handle_uploaded_file(inp_file, "media/upload/pdf_txt/")
                 
                 reader = PdfReader(settings.MEDIA_ROOT+f"/upload/pdf_txt/{inp_file.name}")
     
@@ -194,7 +242,7 @@ def pdf_to_txt(request):
                     f.write(page.extract_text())
                 return redirect(f"/download/?{randomStr('/output/'+txtFileName)}")
             else:
-                # messages.error(request, "Invalid file type")
+                messages.error(request, "Invalid file type")
                 print("Invalid file type")
     
     return render(request, "home/pdfToTXT.html")
@@ -206,8 +254,10 @@ def protect_PDF(request):
         form = fileInp_frm(request.POST, request.FILES)
         if form.is_valid():
             inp_file= request.FILES["file"]
+
             if (inp_file.name).endswith('.pdf') or (inp_file.name).endswith('.PDF') :
-                handle_uploaded_pdf_file(inp_file, "media/upload/enc_pdf/")
+                
+                handle_uploaded_file(inp_file, "media/upload/enc_pdf/")
                 return JsonResponse({"success":True,"fn":inp_file.name})
                 
             else:
@@ -261,6 +311,7 @@ def dlt_all_file(request):
         output=list(dirPathCreate('output').glob("*"))  
         rotate=list(dirPathCreate('rotate').glob("*"))  
         protect=list(dirPathCreate('upload/enc_pdf').glob("*"))  
+        img_to_pdf=list(dirPathCreate('upload/img').glob("*"))  
 
         dltFile_func(mrg_pdf)
         dltFile_func(pdf_to_txt)
@@ -268,6 +319,7 @@ def dlt_all_file(request):
         dltFile_func(output)
         dltFile_func(rotate)
         dltFile_func(protect)
+        dltFile_func(img_to_pdf)
         
         success=True
     return JsonResponse({"success":success})

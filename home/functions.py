@@ -18,7 +18,7 @@ def randomStr(filename):
     rndStr=''.join(random.choice(letters) for i in range(130))
     return f"rnT={rndStr}&fn={filename}"
 
-def handle_uploaded_pdf_file(file, fpath):  
+def handle_uploaded_file(file, fpath):  
     #save the uploaded file in the "upload" folder
     if not os.path.isfile(fpath+file.name):
         with open(fpath+file.name, 'wb+') as destination:  
@@ -41,4 +41,12 @@ def rotate_file(deg, old_filename, new_filename):
         writer.write(fp)
     return True
 
+def files_list(W_filesList):
+    W_filesList.sort(key=lambda x: os.path.getmtime(x))
+    
+    files_list=[]
+    for i in W_filesList:
+        files_list.append(os.path.basename(i))
+    
+    return files_list
 
