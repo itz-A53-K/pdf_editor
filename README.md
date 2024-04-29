@@ -6,7 +6,7 @@ This project is a PDF editor web application built with Django that empowers use
 
 ## Get Started
 
-Follow these followinf steps to set up and run this PDF editor website locally:
+Follow these following steps to set up and run this PDF editor website locally:
 
 ### 1. Prerequisites
    - **Python** :
