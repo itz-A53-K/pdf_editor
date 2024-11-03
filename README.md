@@ -25,11 +25,13 @@ git clone https://github.com/itz-A53-K/pdf_editor.git
 Navigate to your project directory and run the following command to install the required libraries listed in your `requirements.txt` file
 ```
 
-pip install -r requirements.txt
+pip install -r requirement.txt
 
 ```
-This command reads the requirements.txt file and installs all the specified libraries.
+This command reads the requirement.txt file and installs all the specified libraries.
 
 ## Follow Me
-Follow me on [LinkedIn](www.linkedin.com/in/abinash-kalita) for more project details.
+Follow me on [LinkedIn](https://www.linkedin.com/in/abinash-kalita) for more project details.
+## Know Me
+Check-out my [Portfolio](https://www.abikalita.in) to know and hire me. 
 
